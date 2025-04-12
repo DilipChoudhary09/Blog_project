@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Custom Timer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+    }
+
+    .inputs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 1rem;
+    }
+
+    input {
+      width: 60px;
+      padding: 5px;
+      font-size: 1rem;
+      text-align: center;
+      border-radius: 5px;
+      border: none;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .start-btn {
+      background: #28a745;
+      color: white;
+    }
+
+    .stop-btn {
+      background: #dc3545;
+      color: white;
+    }
+
+    .timer-display {
+      font-size: 2.5rem;
+      margin-top: 20px;
+    }
+
+    .message {
+      font-size: 2rem;
+      color: #ff4c4c;
+      margin-top: 20px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Custom Countdown Timer</h1>
+  <div class="inputs">
+    <input type="number" id="hours" placeholder="HH" min="0">
+    <input type="number" id="minutes" placeholder="MM" min="0" max="59">
+    <input type="number" id="seconds" placeholder="SS" min="0" max="59">
+  </div>
+
+  <div class="buttons">
+    <button class="start-btn" onclick="startTimer()">Start Timer</button>
+    <button class="stop-btn" onclick="stopTimer()">Stop Timer</button>
+  </div>
+
+  <div class="timer-display" id="timerDisplay">00:00:00</div>
+  <div class="message" id="timeUpMessage"> Time is up!</div>
+
+  <script>
+    let countdownInterval;
+    let totalTime = 0;
+
+    function startTimer() {
+      stopTimer(); // clear any existing timer
+      document.getElementById("timeUpMessage").style.display = "none";
+
+      let hours = parseInt(document.getElementById("hours").value) || 0;
+      let minutes = parseInt(document.getElementById("minutes").value) || 0;
+      let seconds = parseInt(document.getElementById("seconds").value) || 0;
+
+      totalTime = hours * 3600 + minutes * 60 + seconds;
+
+      if (totalTime <= 0) {
+        alert("Please enter a valid time.");
+        return;
+      }
+
+      updateDisplay(totalTime);
+
+      countdownInterval = setInterval(() => {
+        totalTime--;
+
+        if (totalTime < 0) {
+          stopTimer();
+          document.getElementById("timeUpMessage").style.display = "block";
+          document.getElementById("timerDisplay").textContent = "00:00:00";
+        } else {
+          updateDisplay(totalTime);
+        }
+      }, 1000);
+    }
+
+    function stopTimer() {
+      clearInterval(countdownInterval);
+      
+    }
+
+    function updateDisplay(total) {
+      let h = Math.floor(total / 3600);
+      let m = Math.floor((total % 3600) / 60);
+      let s = total % 60;
+      document.getElementById("timerDisplay").textContent =
+        `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        
+    }
+  </script>
+</body>
+</html>
